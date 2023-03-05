@@ -1,6 +1,7 @@
 # miaged
 
 TP flutter MIAGED
+Pour lancer le projet `flutter pub get`
 
 ## Fonctionnalités 
 
