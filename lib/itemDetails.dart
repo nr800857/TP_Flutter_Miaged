@@ -15,8 +15,6 @@ class ItemDetailsPage extends StatefulWidget {
 
 class _ItemDetailsPageState extends State<ItemDetailsPage> {
   Article article = Article('', '', '', 0, '', '', '', '');
-  List<Article> articles = [];
-  String itemID = '';
 
   Future<Article> getArticle(String id) async {
     Article a = Article('', '', '', 0, '', '', '', '');
@@ -88,6 +86,25 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
       ),
     );
 
+    final removeButton = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 50.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 224, 181, 181),
+          textStyle: const TextStyle(fontSize: 20),
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+        ),
+        onPressed: () async {
+          FirebaseFirestore.instance.collection('items').doc(article.id).delete();
+          Navigator.pop(context);
+        },
+        child: const Text('Supprimer l\'article'),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('MIAGED'),
@@ -140,6 +157,8 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
           const SizedBox(height: 24.0),
           if (globals.shoppingBag.any((item) => item.id == article.id))
             removeCartButton
+          else if(article.userID == globals.userID)
+            removeButton
           else
             addCartButton,
         ],

@@ -11,6 +11,16 @@ class ShoppingBag extends StatefulWidget {
 }
 
 class _ShoppingBagState extends State<ShoppingBag> {
+  
+  double getTotal() {
+    double total = 0;
+    for (var i = 0; i < globals.shoppingBag.length; i++) {
+      total += globals.shoppingBag[i].prix;
+    }
+    return total;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     var nbItems = Text("Pannier(${globals.shoppingBag.length})",
@@ -77,13 +87,31 @@ class _ShoppingBagState extends State<ShoppingBag> {
       ),
     );
 
+    Widget total = Container(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "Total",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            "${getTotal()}€",
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          )
+        ],
+      ),
+    );
+
     if (globals.shoppingBag.isNotEmpty) {
       return Column(
         children: [
           nbItems,
           Expanded(
             child: cart,
-          )
+          ),
+          total,
         ],
       );
     } else {

@@ -285,7 +285,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     id: articles[index].id,
                   ),
                 ),
-              );
+              ).then((value) => setState(() {
+                getArticles(globals.userID).then((val) => setState(() {
+                  articles = val;
+                }));
+              }));
             },
             child: Column(
               children: [
