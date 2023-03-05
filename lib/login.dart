@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:miaged/forgotPassword.dart';
+import 'package:miaged/signup.dart';
 import 'globals.dart' as globals;
 import 'article.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -88,20 +90,25 @@ class _LoginPageState extends State<LoginPage> {
                         .doc(element)
                         .get()
                         .then((doc) {
-                      globals.shoppingBag.add(Article(doc['nom'], doc['marque'],
-                          doc['image'], doc['prix'], doc['taille'], doc["type"], element));
+                      globals.shoppingBag.add(Article(
+                          doc['nom'],
+                          doc['marque'],
+                          doc['image'],
+                          doc['prix'],
+                          doc['taille'],
+                          doc["type"],
+                          element,
+                          doc['userID'],));
                     });
                   }
-                }
-                else {
+                } else {
                   await FirebaseFirestore.instance
                       .collection('carts')
-                      .add({"userID": globals.userID, "items": []})
-                      .then((value) => globals.cartID = value.id);
+                      .add({"userID": globals.userID, "items": []}).then(
+                          (value) => globals.cartID = value.id);
                 }
               });
               Navigator.of(context).pushReplacementNamed(HomePage.tag);
-
             } else {
               setState(() {
                 showError = true;
@@ -123,7 +130,34 @@ class _LoginPageState extends State<LoginPage> {
         'Mot de passe oublié ?',
         style: TextStyle(color: Colors.black54),
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ForgotPassword(),
+                ),
+              );
+      },
+    );
+
+    final signInButton = TextButton(
+      style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18.0),
+      ))),
+      child: const Text(
+        'S\'inscrire',
+        style: TextStyle(color: Colors.black54, fontSize: 20),
+      ),
+      onPressed: () {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SignUp(),
+                ),
+              );
+      },
     );
 
     return Scaffold(
@@ -139,6 +173,7 @@ class _LoginPageState extends State<LoginPage> {
             email,
             const SizedBox(height: 8.0),
             password,
+            forgotLabel,
             const SizedBox(height: 24.0),
             if (showError)
               const Text(
@@ -147,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                 textAlign: TextAlign.center,
               ),
             loginButton,
-            forgotLabel
+            signInButton,
           ],
         ),
       ),

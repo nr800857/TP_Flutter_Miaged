@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:miaged/login.dart';
 import 'item.dart';
 import 'profile.dart';
 import 'shoppingbag.dart';
+import 'globals.dart' as globals;
 
 class HomePage extends StatefulWidget {
   static String tag = 'home-page';
@@ -22,6 +24,7 @@ class _HomePageState extends State<HomePage>{
     const ShoppingBag(),
     const Profile(),
   ];
+
 
   void _onItemTapped(int index) {
     setState(() {

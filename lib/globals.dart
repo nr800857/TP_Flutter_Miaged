@@ -5,3 +5,4 @@ bool isLoggedIn = false;
 String userID = "";
 String cartID = "";
 List<Article> shoppingBag = [];
+

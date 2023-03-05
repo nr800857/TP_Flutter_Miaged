@@ -14,12 +14,12 @@ class ItemDetailsPage extends StatefulWidget {
 }
 
 class _ItemDetailsPageState extends State<ItemDetailsPage> {
-  Article article = Article('', '', '', 0, '', '', '');
+  Article article = Article('', '', '', 0, '', '', '', '');
   List<Article> articles = [];
   String itemID = '';
 
   Future<Article> getArticle(String id) async {
-    Article a = Article('', '', '', 0, '', '', '');
+    Article a = Article('', '', '', 0, '', '', '', '');
     CollectionReference items = FirebaseFirestore.instance.collection('items');
     await items.doc(id).get().then((doc) {
       a = Article(
@@ -30,6 +30,7 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
         doc['taille'],
         doc["type"],
         id,
+        doc["userID"]
       );
     });
 

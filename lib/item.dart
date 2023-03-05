@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miaged/itemDetails.dart';
 import 'article.dart';
+import 'globals.dart' as globals;
 
 class Item extends StatefulWidget {
   const Item({super.key});
@@ -36,7 +37,7 @@ class _ItemState extends State<Item> with TickerProviderStateMixin {
       if (querySnapshot.docs.isNotEmpty) {
         for (var doc in querySnapshot.docs) {
           a.add(Article(doc["nom"], doc["marque"], doc["image"], doc["prix"],
-              doc["taille"], doc["type"], doc.reference.id));
+              doc["taille"], doc["type"], doc.reference.id, doc["userID"]));
         }
       }
     });
@@ -45,8 +46,8 @@ class _ItemState extends State<Item> with TickerProviderStateMixin {
 
   _ItemState() {
     getArticles().then((val) => setState(() {
-          articles = val;
-          articlesCopy = val;
+          articles = val.where((element) => element.userID != globals.userID).toList();
+          articlesCopy = articles;
         }));
   }
 
