@@ -8,7 +8,7 @@ Pour lancer le projet `flutter pub get`
 ### Page Login
 
 * Connexion avec firebase 
-* Mot de passe offusqué 
+* Mot de passe obfusqué 
 
 Compte de test :
 mail : mail@test.com  

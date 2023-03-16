@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as globals;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'itemDetails.dart';
@@ -68,8 +71,12 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                   "items": FieldValue.arrayRemove(
                                       [globals.shoppingBag[index].id])
                                 });
-                                setState(() {
+                                setState(() async {
                                   globals.shoppingBag.removeAt(index);
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  prefs.setString("shoppingBag", jsonEncode(
+                                        globals.shoppingBag.map((x) => x.toJson()).toList()));
+                                    
                                 });
                               },
                             )

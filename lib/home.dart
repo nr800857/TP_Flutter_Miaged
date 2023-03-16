@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:miaged/article.dart';
 import 'package:miaged/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'item.dart';
 import 'profile.dart';
 import 'shoppingbag.dart';
@@ -16,6 +20,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>{
   int _selectedIndex = 0;
   String itemDetailsIndex = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _chargerDonneesLocales();
+  }
+
+  void _chargerDonneesLocales() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      globals.isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+      globals.userID = prefs.getString('userID') ?? '';
+      globals.cartID = prefs.getString('cartID') ?? '';
+      String shoppingBagString = prefs.getString('shoppingBag') ?? '';
+      if (shoppingBagString != '') {
+        Iterable iterable = jsonDecode(shoppingBagString);
+        globals.shoppingBag = List<Article>.from(iterable.map((x) => Article.fromJson(x)));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

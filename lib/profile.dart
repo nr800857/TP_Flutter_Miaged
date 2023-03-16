@@ -100,6 +100,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
+      readOnly: true,
       controller: emailController,
       autofocus: false,
       decoration: InputDecoration(

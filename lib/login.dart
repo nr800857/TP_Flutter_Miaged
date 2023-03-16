@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:miaged/forgotPassword.dart';
 import 'package:miaged/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as globals;
 import 'article.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +19,16 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool showError = false;
+
+  void _sauvegarderDonneesLocalesString(String nom, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(nom, value);
+  }
+
+  void _sauvegarderDonneesLocalesBool(String nom, bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(nom, value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +88,9 @@ class _LoginPageState extends State<LoginPage> {
               .then((querySnapshot) async {
             if (querySnapshot.docs.isNotEmpty) {
               globals.isLoggedIn = true;
-              globals.userID = querySnapshot.docs[0].reference.id;
+              _sauvegarderDonneesLocalesBool("isLoggedIn", true);
+              _sauvegarderDonneesLocalesString(
+                  "userID", querySnapshot.docs[0].reference.id);
               await FirebaseFirestore.instance
                   .collection('carts')
                   .where("userID",
@@ -83,7 +98,8 @@ class _LoginPageState extends State<LoginPage> {
                   .get()
                   .then((querySnapshot) async {
                 if (querySnapshot.docs.isNotEmpty) {
-                  globals.cartID = querySnapshot.docs[0].reference.id;
+                  _sauvegarderDonneesLocalesString(
+                      "cartID", querySnapshot.docs[0].reference.id);
                   for (var element in querySnapshot.docs[0]["items"]) {
                     await FirebaseFirestore.instance
                         .collection('items')
@@ -91,16 +107,21 @@ class _LoginPageState extends State<LoginPage> {
                         .get()
                         .then((doc) {
                       globals.shoppingBag.add(Article(
-                          doc['nom'],
-                          doc['marque'],
-                          doc['image'],
-                          doc['prix'],
-                          doc['taille'],
-                          doc["type"],
-                          element,
-                          doc['userID'],));
+                        doc['nom'],
+                        doc['marque'],
+                        doc['image'],
+                        doc['prix'],
+                        doc['taille'],
+                        doc["type"],
+                        element,
+                        doc['userID'],
+                      ));
                     });
                   }
+                  _sauvegarderDonneesLocalesString(
+                      "shoppingBag",
+                      jsonEncode(
+                          globals.shoppingBag.map((x) => x.toJson()).toList()));
                 } else {
                   await FirebaseFirestore.instance
                       .collection('carts')
@@ -132,11 +153,11 @@ class _LoginPageState extends State<LoginPage> {
       ),
       onPressed: () {
         Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ForgotPassword(),
-                ),
-              );
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ForgotPassword(),
+          ),
+        );
       },
     );
 
@@ -152,11 +173,11 @@ class _LoginPageState extends State<LoginPage> {
       ),
       onPressed: () {
         Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SignUp(),
-                ),
-              );
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SignUp(),
+          ),
+        );
       },
     );
 
